@@ -1,0 +1,54 @@
+---
+all:
+  vars:
+    ansible_user: ansbot
+    ansible_become: true
+    ansible_ssh_port: 22
+    ansible_ssh_private_key_file: secrets/anskey
+    #ansible_host_key_checking: false            # testing
+
+  children:
+    dns:
+      children:
+        master:
+          hosts:
+            centos-dns-master:
+              ansible_host: 172.16.0.3
+        slave:
+          hosts:
+            centos-dns-slave:
+              ansible_host: 172.16.0.4
+
+    dhcp:
+      children:
+        master:
+          hosts:
+            centos-dhcp-master:
+              ansible_host: 172.16.0.5
+        slave:
+          hosts:
+            centos-dhcp-slave:
+              ansible_host: 172.16.0.6
+
+    test:
+      hosts:
+        centos-ansible-slave-01:
+          ansible_host: 172.16.0.10
+        centos-ansible-slave-02:
+          ansible_host: 172.16.0.11
+        centos-ansible-slave-03:
+          ansible_host: 172.16.0.12
+
+    kube:
+      hosts:
+        centos-kube-master-01:
+          ansible_host: 172.16.0.20
+        centos-kube-worker-01:
+          ansible_host: 172.16.0.24
+        centos-kube-worker-02:
+          ansible_host: 172.16.0.25
+
+    vpn:
+      hosts:
+        centos-tailscale-lab:
+          ansible_host: 172.16.0.60
