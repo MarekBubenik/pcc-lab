@@ -1,0 +1,48 @@
+all:
+  children:
+    homelab_grp:
+      children:
+        hypervisor_grp:
+          hosts:
+            proxmox:
+              ansible_host: 192.168.50.2
+        personal_grp:
+          hosts:
+            pihole:
+              ansible_host: 192.168.50.3
+            tailscale: 
+              ansible_host: 192.168.50.4
+            chrony:
+              ansible_host: 192.168.50.5
+            truenas:
+              ansible_host: 192.168.50.6
+            gitlab:
+              ansible_host: 192.168.50.7
+        playground_grp:
+          hosts:
+            playground:
+              ansible_host: 192.168.50.10
+            # alma-test-template:
+            #   ansible_host: 192.168.50.224
+        database_grp:
+          hosts:
+            database-master-01:
+              ansible_host: 192.168.50.70
+            database-master-02:
+              ansible_host: 192.168.50.71
+        ansible_grp:
+          hosts:
+            ansible-master-01:
+              ansible_host: 192.168.50.80
+        testlab_grp:
+          hosts:
+            k8s-master-01:
+              ansible_host: 192.168.50.90
+            k8s-master-02:
+              ansible_host: 192.168.50.91
+            k8s-worker-01:
+              ansible_host: 192.168.50.100
+            k8s-worker-02:
+              ansible_host: 192.168.50.101
+            k8s-worker-03:
+              ansible_host: 192.168.50.102

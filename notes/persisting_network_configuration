@@ -1,0 +1,34 @@
+Persisted Network Configuration
+-------------------------------
+- permanent network configuration files are in /etc/sysconfig/network-scripts
+
+nmcli device
+- shows physical devices
+
+nmcli connection
+- connections software configurations that are applied to devices
+
+nmcli connection add type ethernet ifname eth1 ipv4.method manual ipv4.addresses 192.168.1.99/24 connection.id cafe
+- adds a static IP address to eth1 device and calls it "cafe"
+
+nmcli connection up cafe
+- bring the connection up
+
+
+DNS configuration
+-----------------
+- possible to have different DNS of Gateway settings for different connections if not using DHCP
+
+nmcli connection modify cafe ipv4.dns 8.8.8.8
+- set DNS servers for cafe connection
+
+cat /etc/resolv.conf
+- reads DNS configuration file
+
+
+ncmli connection modify cafe ipv4.dns-priority 1
+- default DNS priority is 100, for VPN it is 50
+- the lower value wins
+
+ncmli connection modify cafe ipv4.dns-priority -1
+- the ultra low value -1 overrides others' DNS connections

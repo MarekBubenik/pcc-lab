@@ -1,0 +1,70 @@
+Nftables
+--------
+- default kernel firewall in RHEL 8/9
+- nftables does not have any predefined tables, need to be defined
+- this is by default handled by firewalld
+
+/etc/sysconfig/nftables.conf                main config file
+nft list ruleset > /etc/sysconfig/nftables.conf
+
+
+nft list ruleset
+- list all the rules
+
+nft flush ruleset
+- remove all the rules
+
+nft list tables
+- list all the tables
+
+e.g.: table inet firewalld
+- table / protocol family / table name
+- inet combines ipv4 and ipv6 rules together into a single table
+
+nft add table inet filter
+- adds a table, inet family protocol with name filter (for reference, iptables had filter table)
+
+nft add chain inet filter INPUT { type filter hook input priority 0 \; policy accept \; }
+- adds a chain, inet family protocol with a name INPUT to the table called filter
+- chain is a set of rules
+- in a brace brackets:
+            type
+                filter      packet filtering
+
+            hook            specifies where our chain will work
+                input
+
+            priority        we can have multiple chains with the same type and hook and then we can control which one is read first
+                0           highest priority
+
+- the symbol \; is to create a new line, since chains are read line by line (escaping the semi colon)
+
+            policy
+                accept
+
+
+nft add rule inet filter INPUT iif lo accept
+
+            iif             interface
+                lo          loopback device
+            accept
+
+nft add rule inet filter INPUT ct state established.related
+
+            ct              rule based on connection status
+                state       ... if the state of connection is...
+                    established,related     ...either of these...
+            accept                          ...accept
+
+nft add rule inet filter INPUT tcp dport 22 accept
+
+            tcp             protocol
+            dport           port
+                22
+            accept
+
+nft add rule inet filter INPUT counter drop
+
+            counter         count how many packages...
+            drop            ... we drop
+

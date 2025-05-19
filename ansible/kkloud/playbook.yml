@@ -1,0 +1,26 @@
+---
+- hosts: playground_grp
+  become: true
+  vars:
+    ansible_user: ansbot
+    ansible_ssh_private_key: /home/mb/.ssh/ansiblekey
+    ansible_host_key_checking: False
+  tasks:
+    - name: Update cache and install packages
+      ansible.builtin.import_tasks:
+        file: /home/mb/ansiblestuff/tasks/install_packages.yaml
+    - name: Modify sshd_config
+      ansible.builtin.import_tasks:
+        file: /home/mb/ansiblestuff/tasks/modify_sshd.yaml
+
+  # tasks:
+  # - name: Ensure chrony (for time synchronization) is installed
+  #   dnf:
+  #     name: chrony
+  #     state: present
+
+  # - name: Ensure chrony is running
+  #   service:
+  #     name: chrony
+  #     state: started
+  #     enabled: yes

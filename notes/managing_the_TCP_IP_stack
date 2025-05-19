@@ -1,0 +1,36 @@
+Namespaces - virtual networks
+-----------------------------
+ip netns
+- shows namespaces
+
+ip netns add net1
+- add a new namespace called net1
+
+ip netns exec net1
+                ip a s
+- executes command inside the namespace net1
+
+ip link add veth0 type veth peer name veth1 netns net1
+- within the default namescape, we are adding the virtual network card called veth0
+- the veth0 is then link to another virtual NIC veth1 that is within namespace net1
+
+ip netns exec net1 ip addr add 10.0.0.1/24 dev veth1
+- add IP address to the vNIC veth1
+
+ip netns exec net1 ip link set dev veth1 up
+- bring the vNIC up (activate it)
+
+ip addr add 10.0.0.2/24 dev veth0
+- by assinging an IP address from the namespace net1 to vNIC within the default namespace, we create a
+record within the routing table so we can reach the subnet 10.0.0.0/24 from outside
+
+
+Route tables
+------------
+ip ro sh
+- show route table
+
+ip route add 192.168.100.0/24 via 10.0.0.2
+- adds a static route to a subnet 192.168.100.0/24 via 10.0.0.2
+
+
