@@ -19,16 +19,16 @@ all:
             centos-dns-slave:
               ansible_host: 172.16.0.4
 
-    dhcp:
-      children:
-        master:
-          hosts:
-            centos-dhcp-master:
-              ansible_host: 172.16.0.5
-        slave:
-          hosts:
-            centos-dhcp-slave:
-              ansible_host: 172.16.0.6
+    # dhcp:
+    #   children:
+    #     master:
+    #       hosts:
+    #         centos-dhcp-master:
+    #           ansible_host: 172.16.0.5
+    #     slave:
+    #       hosts:
+    #         centos-dhcp-slave:
+    #           ansible_host: 172.16.0.6
 
     test:
       hosts:
