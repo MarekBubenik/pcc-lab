@@ -1,0 +1,8 @@
+---
+- name: Fact dump
+  hosts: all
+  gather_facts: true
+  tasks:
+  - ansible.builtin.debug:
+      #msg: System "{{ ansible_facts.nodename }}" is up for "{{ ansible_facts.uptime_seconds }}" seconds
+      msg: "{{ inventory_hostname }} is up for {{ (ansible_facts.uptime_seconds / 3600) | int }} hours."

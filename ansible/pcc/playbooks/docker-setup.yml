@@ -1,1 +1,66 @@
 ---
+- name: Docker setup for CentOS 9 (stream)
+  hosts: docker
+  gather_facts: false
+  become: true
+  vars:
+    user:
+      - mb
+    groups:
+      - docker
+    services:
+      - docker
+    oldpkg:
+      - docker
+      - docker-client
+      - docker-client-latest
+      - docker-common
+      - docker-latest
+      - docker-latest-logrotate
+      - docker-logrotate
+      - docker-engine
+    reporeq:
+      - dnf-plugins-core
+    newpkg:
+      - docker-ce 
+      - docker-ce-cli
+      - containerd.io 
+      - docker-buildx-plugin 
+      - docker-compose-plugin
+  tasks:
+  - name: Uninstall old versions
+    ansible.builtin.dnf:
+      name: "{{ oldpkg }}"
+      state: absent
+
+  - name: Setup rpm repository (1)
+    ansible.builtin.dnf:
+      name: "{{ reporeq }}"
+      state: present
+
+  - name: Setup rpm repository (2)
+    ansible.builtin.yum_repository:
+      name: docker-ce-stable
+      description: Docker CE Stable repository
+      baseurl: https://download.docker.com/linux/centos/$releasever/$basearch/stable
+      enabled: true
+      gpgcheck: true
+      gpgkey: https://download.docker.com/linux/centos/gpg
+
+  - name: Install Docker Engine
+    ansible.builtin.dnf:
+      name: "{{ newpkg }}"
+      state: latest
+
+  - name: Start Docker Engine
+    ansible.builtin.service:
+      name: "{{ services[0] }}"
+      state: started
+      enabled: yes
+
+  - name: Add user to docker group
+    ansible.builtin.user:
+      name: "{{ user[0] }}"
+      groups: "{{ groups[0] }}"
+      append: yes
+  
