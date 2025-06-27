@@ -173,6 +173,7 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
-# proxmox
+# custom
 *.qcow2
 secrets/
+logs/

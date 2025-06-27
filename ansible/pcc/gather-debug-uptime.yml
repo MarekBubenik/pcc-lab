@@ -1,0 +1,8 @@
+---
+- name: Ansible facts - show uptime in hours
+  hosts: all
+  gather_facts: true
+  tasks:
+  - ansible.builtin.debug:
+      msg: "{{ inventory_hostname }} is up for {{ (ansible_facts['uptime_seconds'] / 3600) | int }} hours."
+      #msg: Uptime "{{ now().replace(microsecond=0) - now().fromtimestamp(now(fmt='%s') | int - ansible_facts['uptime_seconds'] }}"

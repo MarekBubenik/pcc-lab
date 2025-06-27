@@ -19,5 +19,5 @@
   - name: Set authorized key for the user {{ username }}
     ansible.posix.authorized_key:
       user: "{{ username }}"
+      key: "{{ lookup('ansible.builtin.file', '../secrets/anskey.pub') }}"
       state: present
-      key: "{{ lookup('file', '../secrets/anskey.pub') }}"

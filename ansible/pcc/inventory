@@ -1,0 +1,19 @@
+[docker]
+lab-docker	ansible_host=172.16.0.10
+
+[kube]
+lab-kube-master-01	ansible_host=172.16.0.20
+lab-kube-worker-01	ansible_host=172.16.0.21
+lab-kube-worker-02	ansible_host=172.16.0.22
+
+[git]
+lab-gitlab	ansible_host=172.16.0.100
+
+[all:vars]
+ansible_user=mb
+ansible_become=true
+ansible_ssh_port=22
+ansible_ssh_private_key_file=secrets/anskey
+
+
+
