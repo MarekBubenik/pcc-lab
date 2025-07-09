@@ -1,0 +1,35 @@
+---
+- name: Create personal accounts + group
+  gather_facts: true
+  hosts: kube
+  vars_files:
+    - creds.yml
+  tasks:
+    - name: Create the {{ admgrps }} group
+      ansible.builtin.group:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ admgrps }}"
+
+    - name: Creates a record in sudoers.d folder, give the group ability to execute as sudo
+      ansible.builtin.lineinfile:
+        path: /etc/sudoers.d/atosadmin
+        create: true
+        mode: '0440'
+        owner: root
+        group: root
+        line: '%atosadmin ALL=(ALL:ALL) PASSWD: ALL'
+        validate: 'visudo -cf %s'
+
+    - name: Create personal admin accounts
+      ansible.builtin.user:
+        name: "{{ item['name'] }}"
+        append: true
+        groups: "{{ admgrps }}"
+        create_home: true
+        password: "{{ item['password'] }}"
+        shell: /bin/bash
+        state: present
+        update_password: always
+      loop: "{{ admusers }}"
+      no_log: true

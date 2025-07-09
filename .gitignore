@@ -177,3 +177,6 @@ cython_debug/
 *.qcow2
 secrets/
 logs/
+sota/
+creds.yml
+

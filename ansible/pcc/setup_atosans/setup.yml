@@ -1,0 +1,35 @@
+#
+# First run execute with iadm account parameters:
+# ansible-playbook -i inventory setup_atosans/setup.yml -e "ansible_user=iadm" --ask-pass --ask-become-pass --vault-id @prompt
+#
+---
+- name: Ansible agent setup
+  gather_facts: true
+  hosts: kube
+  vars_files:
+    - creds.yml
+  tasks:
+    - name: Create ansible agent account
+      ansible.builtin.user:
+        name: "{{ admagent_name }}"
+        create_home: true
+        password: "{{ admagent_password }}"
+        shell: /bin/bash
+        state: present
+        update_password: always
+
+    - name: Creates a record in sudoers.d folder, give the ability to execute without password
+      ansible.builtin.lineinfile:
+        path: /etc/sudoers.d/atosans
+        create: true
+        mode: '0440'
+        owner: root
+        group: root
+        line: 'atosans ALL=(ALL:ALL) NOPASSWD:ALL'
+        validate: 'visudo -cf %s'
+    
+    - name: Set authorized key for the user
+      ansible.posix.authorized_key:
+        user: "{{ admagent_name }}"
+        key: "{{ admagent_key }}"
+        state: present

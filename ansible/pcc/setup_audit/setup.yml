@@ -1,0 +1,114 @@
+---
+- name: Auditd and logs rotation setup
+  gather_facts: true
+  hosts: all
+  tasks:
+    # Check prerequisites
+    - name: Package auditd present - Ubuntu
+      ansible.builtin.package:
+        name: auditd
+        state: present
+      when: ansible_facts['os_family'] == 'Debian'
+      notify: 
+        - Package auditd not present on Ubuntu system
+
+    - name: Package auditd present - RHEL
+      ansible.builtin.package:
+        name: audit
+        state: present
+      when: ansible_facts['os_family'] == 'RedHat'
+      notify: 
+        - Package auditd not present on RHEL system
+
+    - name: Package logrotate present
+      ansible.builtin.package:
+        name: logrotate
+        state: present
+      notify: 
+        - Package logrotate not present
+
+    - name: Check for auditd.service
+      ansible.builtin.service:
+        name: auditd
+        state: started
+        enabled: true
+
+    - name: Check for logrotate.timer (triggers logrotate.service) - Ubuntu
+      ansible.builtin.service:
+        name: logrotate.timer
+        state: started
+        enabled: true
+      when: ansible_facts['os_family'] == 'Debian'
+      notify:
+        - Enable and start the logrotate.timer
+
+    # Files management
+    - name: Creates a backup of the auditd.conf
+      ansible.builtin.copy:
+        remote_src: true
+        src: /etc/audit/auditd.conf
+        dest: /etc/audit/auditd.conf.bck
+      ignore_errors: yes
+
+    - name: Setup a new auditd.conf
+      ansible.builtin.copy:
+        src: ./auditd.conf
+        dest: /etc/audit/auditd.conf
+      notify:
+        - Restart auditd service - Ubuntu
+        - Restart auditd service - RHEL
+        # - Print custom local variable
+
+    - name: Setup audit logrotate file
+      ansible.builtin.copy:
+        src: ./audit
+        dest: /etc/logrotate.d/audit
+
+    - name: Setup cron file for logrotate
+      ansible.builtin.copy:
+        src: ./logrotate
+        dest: /etc/cron.daily/logrotate
+
+    - name: Make cron file for logrotate executable
+      ansible.builtin.file:
+        path: /etc/cron.daily/logrotate
+        owner: root
+        group: root
+        mode: '0755'
+
+  handlers:
+    - name: Package auditd not present on Ubuntu system
+      ansible.builtin.package:
+        name: auditd
+        state: latest
+
+    - name: Package auditd not present on RHEL system
+      ansible.builtin.package:
+        name: audit
+        state: latest
+
+    - name: Package logrotate not present
+      ansible.builtin.package:
+        name: logrotate
+        state: latest
+
+    - name: Enable and start the logrotate.timer
+      ansible.builtin.service:
+        name: logrotate.timer
+        state: started
+        enabled: true
+
+    - name: Restart auditd service - Ubuntu
+      ansible.builtin.service:
+        name: auditd
+        state: restarted
+      when: ansible_facts['os_family'] == 'Debian'
+
+    - name: Restart auditd service - RHEL
+      ansible.builtin.command: service auditd restart 
+      #register: service_exit
+      when: ansible_facts['os_family'] == 'RedHat'
+
+    # - name: Print custom local variable
+    #   ansible.builtin.debug:
+    #     msg: "{{ service_exit }}"
