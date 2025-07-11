@@ -1,0 +1,33 @@
+---
+- name: Setup a cron job for password rotation
+  hosts: all
+  gather_facts: false
+  vars:
+    root_scripts_dir: /root/scripts
+  tasks:
+    - name: Verify scripts dir exist
+      ansible.builtin.file:
+        path: "{{ root_scripts_dir }}"
+        owner: root
+        group: root
+        state: directory
+        mode: 0750
+
+    - name: Copy script over
+      ansible.builtin.copy:
+        src: ./chpwage.sh
+        dest: "{{ root_scripts_dir }}/chpwage.sh"
+        owner: root
+        group: root
+        mode: 0700
+
+    - name: Create a cron
+      ansible.builtin.cron:
+        name: "Created by an Ansible task"
+        minute: "0"
+        hour: "18"
+        day: "1"
+        month: "*/2"
+        job: "{{ root_scripts_dir }}/chpwage.sh"
+        user: root
+        state: present

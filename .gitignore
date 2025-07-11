@@ -179,4 +179,6 @@ secrets/
 logs/
 sota/
 creds.yml
+group_vars/
+host_vars/
 

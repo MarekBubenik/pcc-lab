@@ -1,7 +1,7 @@
 ---
 - name: Create personal accounts + group
   gather_facts: true
-  hosts: kube
+  hosts: all
   vars_files:
     - creds.yml
   tasks:
@@ -33,3 +33,4 @@
         update_password: always
       loop: "{{ admusers }}"
       no_log: true
+

@@ -3,9 +3,10 @@
 # ansible-playbook -i inventory setup_atosans/setup.yml -e "ansible_user=iadm" --ask-pass --ask-become-pass --vault-id @prompt
 #
 ---
+
 - name: Ansible agent setup
   gather_facts: true
-  hosts: kube
+  hosts: all
   vars_files:
     - creds.yml
   tasks:
