@@ -10,14 +10,25 @@
   vars_files:
     - creds.yml
   tasks:
-    - name: Create ansible agent account
+    - name: Create ansible agent account for RPM based systems
       ansible.builtin.user:
         name: "{{ admagent_name }}"
         create_home: true
-        password: "{{ admagent_password }}"
+        password: "{{ admagent_password_rpm }}"
         shell: /bin/bash
         state: present
         update_password: always
+      when: ansible_facts['os_family'] == 'RedHat'
+    
+    - name: Create ansible agent account for DEB based systems
+      ansible.builtin.user:
+        name: "{{ admagent_name }}"
+        create_home: true
+        password: "{{ admagent_password_deb }}"
+        shell: /bin/bash
+        state: present
+        update_password: always
+      when: ansible_facts['os_family'] == 'Debian'
 
     - name: Creates a record in sudoers.d folder, give the ability to execute without password
       ansible.builtin.lineinfile:
