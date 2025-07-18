@@ -176,7 +176,7 @@ cython_debug/
 # custom
 *.qcow2
 secrets/
-inventory
+**/inventory
 logs/
 sota/
 creds.yml
