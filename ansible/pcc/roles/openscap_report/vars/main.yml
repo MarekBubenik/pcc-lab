@@ -1,0 +1,4 @@
+---
+# vars file for openscap_report
+deb_pkg: libopenscap8
+rpm_pkg: openscap-scanner

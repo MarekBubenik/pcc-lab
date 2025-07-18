@@ -176,12 +176,13 @@ cython_debug/
 # custom
 *.qcow2
 secrets/
-**/inventory
+*inventory
 logs/
 sota/
 creds.yml
 group_vars/
 host_vars/
 policy/
+*ds.xml
 *report.html
 *result.xml

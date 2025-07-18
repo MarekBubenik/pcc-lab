@@ -10,9 +10,9 @@ lab-dhcp		ansible_host=lab-dhcp.purplecoppercentipede.space	#ansible_host=172.16
 
 [ansible_workers]
 lab-ansible-worker-01	ansible_host=lab-ansible-worker-01.purplecoppercentipede.space	#ansible_host=172.16.0.30
-#lab-ansible-worker-02	ansible_host=lab-ansible-worker-02.purplecoppercentipede.space	#ansible_host=172.16.0.31
+lab-ansible-worker-02	ansible_host=lab-ansible-worker-02.purplecoppercentipede.space	#ansible_host=172.16.0.31
 lab-ansible-worker-03	ansible_host=lab-ansible-worker-03.purplecoppercentipede.space	#ansible_host=172.16.0.32
-#lab-ansible-worker-04	ansible_host=lab-ansible-worker-04.purplecoppercentipede.space	#ansible_host=172.16.0.33
+lab-ansible-worker-04	ansible_host=lab-ansible-worker-04.purplecoppercentipede.space	#ansible_host=172.16.0.33
 
 [docker]
 lab-docker		ansible_host=lab-docker.purplecoppercentipede.space	#ansible_host=172.16.0.40
