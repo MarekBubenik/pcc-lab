@@ -59,7 +59,7 @@ Ubuntu profile ID from the datastream file (E.g. xccdf_org.ssgproject content_pr
 rpmProfileID:
 ```
 RedHat profile ID from the datastream file (E.g. xccdf_org.ssgproject.content_profile_cis_server_l1)
-```
+
 
 Example Playbook
 ----------------
