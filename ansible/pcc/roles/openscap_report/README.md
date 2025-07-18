@@ -7,21 +7,30 @@ OpenSCAP Compliance Reporting role - does **not** do remediation
 Requirements
 ------------
 
-# https://www.open-scap.org/security-policies/choosing-policy/
+https://www.open-scap.org/security-policies/choosing-policy/
 
 Install pre-req on master Ansible server - Ubuntu: **apt install ssg-base ssg-debderived ssg-debian ssg-nondebian ssg-applications**
+
 Install pre-req on master Ansible server - RHEL: **dnf install scap-security-guide**
 
 Fetch the relevant **datastream** from the **/usr/share/xml/scap/ssg/content/** directory
+
 Create a symlink of a datastream role's files directory so Ansible can use it
+```
 E.g.: **ln -s /usr/share/xml/scap/ssg/content/ssg-cs9-ds.xml files/ssg-cs9-ds.xml**
+```
+```
 E.g.: **ln -s /usr/share/xml/scap/ssh/content/ssg-ubuntu2204-ds.xml files/ssg-ubuntu2204-ds.xml**
+```
 - Or just create the .xml file from scrach and upload it to the files/ directory of the role
 
 Fetch the **profile ID** from the profile based on the datastream you chose
+```
 E.g.: **oscap info /usr/share/xml/scap/ssg/content/ssg-rhel9-ds.xml**
+```
+```
 E.g.: **xccdf_org.ssgproject.content_profile_cis_server_l1**
-
+```
 Make sure to **edit variables in playbook** to the coresponding datastream policies and profile IDs
 
 
@@ -29,13 +38,13 @@ Role Variables
 --------------
 
 **debPolicyName:**
-- Ubuntu datastream file (e.g. ssg-ubuntu2204-ds.xml)
+Ubuntu datastream file (e.g. ssg-ubuntu2204-ds.xml)
 **rpmPolicyName:**
-- RedHat datastream file (e.g. ssg-cs9-ds.xml)
+RedHat datastream file (e.g. ssg-cs9-ds.xml)
 **debProfileID:**
-- Ubuntu profile ID from the datastream file (E.g. xccdf_org.ssgproject.content_profile_cis_level1_server)
+Ubuntu profile ID from the datastream file (E.g. xccdf_org.ssgproject.content_profile_cis_level1_server)
 **rpmProfileID:**
-- RedHat profile ID from the datastream file (E.g. xccdf_org.ssgproject.content_profile_cis_server_l1)
+RedHat profile ID from the datastream file (E.g. xccdf_org.ssgproject.content_profile_cis_server_l1)
 
 
 Example Playbook
@@ -43,8 +52,9 @@ Example Playbook
 
 reporting_openscap.yml
 - If you move the playbook somewhere else, make sure to update role path var
-# - role: '/home/path/to/roles/openscap_report'
+- role: '/home/path/to/roles/openscap_report'
 
+```
 ---
 - name: OpenSCAP Compliance Reporting
   hosts: ansible_workers
@@ -54,7 +64,7 @@ reporting_openscap.yml
       rpmPolicyName: ssg-cs9-ds.xml
       debProfileID: xccdf_org.ssgproject.content_profile_cis_level1_server
       rpmProfileID: xccdf_org.ssgproject.content_profile_cis_server_l1
-
+```
 
 License
 -------
