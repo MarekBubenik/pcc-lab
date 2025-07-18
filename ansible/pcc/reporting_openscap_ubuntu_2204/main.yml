@@ -1,0 +1,76 @@
+---
+# ------
+# https://www.open-scap.org/security-policies/choosing-policy/
+# ------
+# Install pre-req on master Ansible server - Ubuntu: apt install ssg-base ssg-debderived ssg-debian ssg-nondebian ssg-applications
+# Install pre-req on master Ansible server - RHEL: dnf install scap-security-guide
+# ------
+# Fetch the relevant datastream from /usr/share/xml/scap/ssg/content/ directory
+# Create a symlink to datastream inside policy directory so Ansible can use it
+# E.g.: ln -s /usr/share/xml/scap/ssg/content/ssg-cs9-ds.xml policy/ssg-cs9-ds.xml
+# E.g.: ln -s /usr/share/xml/scap/ssh/content/ssg-ubuntu2204-ds.xml policy/ssg-ubuntu2204-ds.xml
+# ------
+# Fetch the profile ID from the profile based on the datastream you chose
+# E.g.: oscap info /usr/share/xml/scap/ssg/content/ssg-rhel9-ds.xml
+# E.g.: xccdf_org.ssgproject.content_profile_cis_server_l1
+# ------
+# Make sure to edit variables in the scapvars.yml file to the coresponding copied datastream policies and profile IDs
+#
+
+- name: OpenSCAP Compliance Reporting
+  hosts: all
+  vars_files:
+    - scapvars.yml
+  tasks:
+    - name: Make sure latest openscap-scanner package is installed
+      ansible.builtin.dnf:
+        name:
+          - openscap-scanner
+        update_cache: true
+        state: latest
+
+    - name: Copy policy content to target server
+      ansible.builtin.copy:
+        src: "./policy/{{ policyName }}"
+        dest: /tmp/
+        remote_src: no
+
+    - name: Run OpenSCAP evaluation (reporting)
+      ansible.builtin.command: >
+        oscap xccdf eval
+        --profile "{{ profileID }}"
+        --results "{{ tmpResultsFile }}"
+        --report "{{ tmpReportFile }}"
+        "/tmp/{{ policyName }}"
+      register: openscap_results
+      no_log: true
+      ignore_errors: true
+
+    - name: Fetch OpenSCAP results to Ansible control server
+      ansible.builtin.fetch:
+        src: "{{ tmpResultsFile }}"
+        dest: ./results/{{ inventory_hostname }}_openscap_result.xml
+        flat: yes
+
+    - name: Fetch OpenSCAP report to Ansible control server
+      ansible.builtin.fetch:
+        src: "{{ tmpReportFile }}"
+        dest: ./reports/{{ inventory_hostname }}_openscap_report.html
+        flat: yes
+
+    - name: Clean up temporary results files
+      ansible.builtin.file:
+        path: "{{ tmpResultsFile }}"
+        state: absent
+
+    - name: Clean up temporary report files
+      ansible.builtin.file:
+        path: "{{ tmpReportFile }}" 
+        state: absent
+
+    - name: Clean up policy content file
+      ansible.builtin.file:
+        path: "/tmp/{{ policyName }}"
+        state: absent
+
+

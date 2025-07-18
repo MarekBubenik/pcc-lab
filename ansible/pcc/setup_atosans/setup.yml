@@ -32,12 +32,12 @@
 
     - name: Creates a record in sudoers.d folder, give the ability to execute without password
       ansible.builtin.lineinfile:
-        path: /etc/sudoers.d/atosans
+        path: "/etc/sudoers.d/{{ admagent_name }}"
         create: true
         mode: '0440'
         owner: root
         group: root
-        line: 'atosans ALL=(ALL:ALL) NOPASSWD:ALL'
+        line: '"{{ admagent_name }}" ALL=(ALL:ALL) NOPASSWD:ALL'
         validate: 'visudo -cf %s'
     
     - name: Set authorized key for the user

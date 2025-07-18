@@ -1,0 +1,5 @@
+---
+policyName: ssg-ubuntu2204-ds.xml
+profileID: xccdf_org.ssgproject.content_profile_cis_level1_server
+tmpResultsFile: /tmp/openscap_result.xml
+tmpReportFile: /tmp/openscap_report.html

@@ -1,10 +1,12 @@
 ---
+# Execute with --ask-become parameter
+
 - name: Scan for SSH host keys and update ~/.ssh/known_hosts file according to the inventory file
   hosts: all
   connection: local
   gather_facts: false
   vars:
-    editme: /home/mb
+    userpath: /home/ansible
   tasks:
     - name: Scan for SSH host keys
       local_action: ansible.builtin.command ssh-keyscan {{ ansible_host }}
@@ -14,7 +16,7 @@
     - name: Update known_hosts
       local_action:
         module: ansible.builtin.known_hosts
-        path: "{{ editme }}/.ssh/known_hosts"
+        path: "{{ userpath }}/.ssh/known_hosts"
         key: "{{ item }}"
         name: "{{ ansible_host }}"
       loop: "{{ ssh_scan.stdout_lines }}"
