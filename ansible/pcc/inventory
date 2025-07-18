@@ -1,5 +1,6 @@
 [master]
 lab-ansible-master-01	ansible_host=lab-ansible-master-01.purplecoppercentipede.space	#ansible_host=172.16.0.10
+lab-ansible-master-02	ansible_host=lab-ansible-master-02.purplecoppercentipede.space	#ansible_host=172.16.0.11
 
 [dns]
 lab-dns			ansible_host=lab-dns.purplecoppercentipede.space	#ansible_host=172.16.0.20
@@ -7,20 +8,20 @@ lab-dns			ansible_host=lab-dns.purplecoppercentipede.space	#ansible_host=172.16.
 [dhcp]
 lab-dhcp		ansible_host=lab-dhcp.purplecoppercentipede.space	#ansible_host=172.16.0.22
 
-[ansible-workers]
+[ansible_workers]
 lab-ansible-worker-01	ansible_host=lab-ansible-worker-01.purplecoppercentipede.space	#ansible_host=172.16.0.30
-lab-ansible-worker-02	ansible_host=lab-ansible-worker-02.purplecoppercentipede.space	#ansible_host=172.16.0.31
+#lab-ansible-worker-02	ansible_host=lab-ansible-worker-02.purplecoppercentipede.space	#ansible_host=172.16.0.31
 lab-ansible-worker-03	ansible_host=lab-ansible-worker-03.purplecoppercentipede.space	#ansible_host=172.16.0.32
-lab-ansible-worker-04	ansible_host=lab-ansible-worker-04.purplecoppercentipede.space	#ansible_host=172.16.0.33
+#lab-ansible-worker-04	ansible_host=lab-ansible-worker-04.purplecoppercentipede.space	#ansible_host=172.16.0.33
 
 [docker]
 lab-docker		ansible_host=lab-docker.purplecoppercentipede.space	#ansible_host=172.16.0.40
 
-[kube]
-lab-kube-master-01	ansible_host=lab-kube-master-01.purplecoppercentipede.space	#ansible_host=172.16.0.50
-lab-kube-worker-01	ansible_host=lab-kube-worker-01.purplecoppercentipede.space	#ansible_host=172.16.0.51
-lab-kube-worker-02	ansible_host=lab-kube-worker-02.purplecoppercentipede.space	#ansible_host=172.16.0.52
+#[kube]
+#lab-kube-master-01	ansible_host=lab-kube-master-01.purplecoppercentipede.space	#ansible_host=172.16.0.50
+#lab-kube-worker-01	ansible_host=lab-kube-worker-01.purplecoppercentipede.space	#ansible_host=172.16.0.51
+#lab-kube-worker-02	ansible_host=lab-kube-worker-02.purplecoppercentipede.space	#ansible_host=172.16.0.52
 
-#[git]
-#lab-gitlab		ansible_host=lab-gitlab.purplecoppercentipede.space	#ansible_host=172.16.0.60
+[git]
+lab-gitlab		ansible_host=lab-gitlab.purplecoppercentipede.space	#ansible_host=172.16.0.60
 

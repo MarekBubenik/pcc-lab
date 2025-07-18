@@ -22,10 +22,10 @@
   vars_files:
     - scapvars.yml
   tasks:
-    - name: Make sure latest openscap-scanner package is installed
-      ansible.builtin.dnf:
+    - name: Make sure latest libopenscap8 package is installed
+      ansible.builtin.apt:
         name:
-          - openscap-scanner
+          - libopenscap8
         update_cache: true
         state: latest
 
