@@ -1,4 +1,4 @@
-Role Name
+openscap_report
 =========
 
 OpenSCAP Compliance Reporting role - does **not** do remediation
