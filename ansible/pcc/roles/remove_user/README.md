@@ -7,15 +7,15 @@ This role removes a user account from a Linux system (Ubuntu/RHEL)
 Role Variables
 --------------
 
+The username of the account to remove
 ```
 user_to_remove_name:
 ```
-The username of the account to remove
 
+Set to 'true' to remove the user's home directory and mail spool
 ```
 user_to_remove_home:
 ```
-Set to 'true' to remove the user's home directory and mail spool
 
 Example Playbook
 ----------------
