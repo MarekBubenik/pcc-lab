@@ -1,0 +1,7 @@
+---
+- name: Remove a user and remove directories associated with them
+  hosts: ansible_workers
+  roles:
+    - role: remove_user
+      user_to_remove_name: ""
+      user_to_remove_home: true
