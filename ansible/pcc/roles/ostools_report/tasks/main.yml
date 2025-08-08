@@ -1,0 +1,37 @@
+---
+#Import installation tasks from a file
+- name: Import extra tasks
+  ansible.builtin.import_tasks:
+    file: install.yml
+
+# Import extra tasks from a file
+- name: Import extra tasks
+  ansible.builtin.import_tasks:
+    file: extra.yml
+
+# Build the CSV File - DEB
+- name: Build the CSV File
+  ansible.builtin.template:
+    src: "csvtemplate_deb.j2"
+    dest: "{{ tmp_path_file }}"
+  when: ansible_facts['os_family'] == 'Debian'
+
+# Build the CSV File - RPM
+- name: Build the CSV File
+  ansible.builtin.template:
+    src: "csvtemplate_rpm.j2"
+    dest: "{{ tmp_path_file }}"
+  when: ansible_facts['os_family'] == 'RedHat'
+
+# Fetch the CSV file
+- name: Fetch the CSV file
+  ansible.builtin.fetch:
+    src: "{{ tmp_path_file }}"
+    dest: "{{ output_path }}{{ inventory_hostname }}_{{ ansible_facts['date_time']['year'] }}-{{ ansible_facts['date_time']['month'] }}-{{ ansible_facts['date_time']['day'] }}_{{ ansible_facts['date_time']['hour'] }}-{{ ansible_facts['date_time']['minute'] }}-{{ ansible_facts['date_time']['second'] }}_{{ dmidecode_var.stdout }}_INF.txt"
+    flat: yes
+
+# Remove the report from TMP folder
+- name: Clean up CSV file
+  ansible.builtin.file:
+    path: "{{ tmp_path_file }}"
+    state: absent

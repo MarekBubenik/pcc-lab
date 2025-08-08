@@ -1,0 +1,6 @@
+---
+- name: Install Icinga 2 on Ubuntu
+  hosts: monitoring
+  gather_facts: true
+  roles:
+    - role: '/home/ansible/pcc-lab/ansible/pcc/roles/setup_icinga'

@@ -1,0 +1,6 @@
+---
+- name: Create OS_Tools CSV report
+  hosts: ansible_workers
+  gather_facts: true
+  roles:
+    - role: ostools_report

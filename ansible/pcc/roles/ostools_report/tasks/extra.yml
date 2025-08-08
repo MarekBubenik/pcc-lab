@@ -1,0 +1,51 @@
+---
+- name: Get serial number
+  ansible.builtin.command: >
+    dmidecode -s system-serial-number | tr -d '[:space:]'
+  register: dmidecode_var
+  ignore_errors: true
+
+- name: Get product number
+  ansible.builtin.command: >
+    dmidecode -s system-product-name
+  register: product_var
+  ignore_errors: true
+
+- name: First setup - date
+  ansible.builtin.shell: >
+    stat / | awk '/Birth: /{print $2}'
+  register: birth_var
+  ignore_errors: true
+
+- name: Get manufacturer brand
+  ansible.builtin.command: >
+   dmidecode -s system-manufacturer
+  register: model_var
+  ignore_errors: true
+
+- name: Check if reboot required (Ubuntu)
+  ansible.builtin.script: files/reboot_required_deb.sh
+  register: reboot_required_deb
+  when: ansible_facts['os_family'] == 'Debian'
+  ignore_errors: true
+
+- name: Check if reboot required (RedHat)
+  ansible.builtin.script: files/reboot_required_rpm.sh
+  register: reboot_required_rpm
+  when: ansible_facts['os_family'] == 'RedHat'
+  ignore_errors: true
+
+# - name: "!!! DEBUG !!!"
+#   ansible.builtin.debug:
+#     msg: "{{ reboot_required_rpm }}"
+
+- name: Check vmware tools version
+  ansible.builtin.command: >
+    vmware-toolbox-cmd -v
+  register: vmware_tools_version_var
+  ignore_errors: true
+
+# - name: task
+#   ansible.builtin.debug:
+#     msg: "{{ ansible_facts['mounts']['size_total']|first }}"
+

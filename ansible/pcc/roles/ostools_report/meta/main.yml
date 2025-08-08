@@ -1,5 +1,5 @@
 galaxy_info:
   author: Marek Bubeník
-  description: OpenSCAP Compliance Reporting role
+  description: OS_Tools reporting tool
   company: purplecoppercentipede.space
   min_ansible_version: 2.1

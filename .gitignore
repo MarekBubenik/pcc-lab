@@ -186,3 +186,4 @@ policy/
 *ds.xml
 *report.html
 *result.xml
+*.csv

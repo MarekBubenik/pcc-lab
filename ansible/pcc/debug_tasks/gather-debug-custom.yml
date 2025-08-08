@@ -1,6 +1,6 @@
 ---
 - name: Ansible facts - test to install package with a custom variable
-  hosts: docker
+  hosts: docker_kube
   gather_facts: true
   tasks:
     #    - name: Print custom local variable
@@ -18,8 +18,23 @@
     #     name: "{{ mycustom['package'] }}"
     #     state: latest
 
-    - name: Print custom local variable
+    # - name: Print custom local variable
+    #   ansible.builtin.debug:
+    #     msg: >-
+    #       The ansible_local variable is set to
+    #       '{{ ansible_facts['os_family'] }}'
+
+    # - name: task
+    #   ansible.builtin.debug:
+    #     msg: "{{ ansible_facts['mounts'][0]['mount'] }}"
+
+    - name: Display all facts
       ansible.builtin.debug:
-        msg: >-
-          The ansible_local variable is set to
-          '{{ ansible_facts['os_family'] }}'
+        var: ansible_facts
+        # msg: |-
+        #   hostname,os_family,memtotal_mb,processor_vcpus,
+        #   {{ ansible_facts['hostname'] }},{{ ansible_facts['os_family'] }},{{ ansible_facts['memtotal_mb'] }},{{ ansible_facts['processor_vcpus'] }},
+
+        #var: ansible_facts['memtotal_mb']
+        #var: ansible_facts['lsb']
+        # var: ansible_facts['processor_vcpus']

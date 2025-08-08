@@ -29,8 +29,3 @@ Example Playbook
       user_to_remove_name: "xyz"
       user_to_remove_home: true
 ```
-
-License
--------
-
-BSD-3-Clause

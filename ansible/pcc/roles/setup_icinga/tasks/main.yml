@@ -1,0 +1,68 @@
+---
+# tasks file for setup_icinga
+
+# Repository setup
+- name: Update APT cache before repository setup
+  ansible.builtin.apt:
+    update_cache: yes
+
+# - name: "dpkg was interrupted, you must manually run 'sudo dpkg --configure -a' to correct the problem."
+#   ansible.builtin.shell: sudo dpkg --configure -a
+
+- name: Install prerequisite packages
+  ansible.builtin.package:
+    name: 
+      - apt-transport-https
+      - wget
+      - gnupg 
+      - ca-certificates 
+      - lsb-release
+      - mariadb-server
+
+- name: Setup repository (part 1)
+  ansible.builtin.uri:
+    url: "https://packages.icinga.com/icinga-archive-keyring_latest+ubuntu{{ ansible_facts['distribution_version'] }}.deb"
+    dest: "{{ tmp_path }}icinga-archive-keyring.deb"
+
+- name: Setup repository (part 2)
+  ansible.builtin.apt:
+    deb: "{{ tmp_path }}icinga-archive-keyring.deb"
+
+- name: Setup repository (part 3)
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/icinga-archive-keyring.gpg] https://packages.icinga.com/ubuntu icinga-{{ ansible_facts['distribution_release'] }} main"
+    state: present
+    filename: "{{ ansible_facts['distribution_release'] }}-icinga"
+
+- name: Setup repository (part 4)
+  ansible.builtin.apt_repository:
+    repo: "deb-src [signed-by=/usr/share/keyrings/icinga-archive-keyring.gpg] https://packages.icinga.com/ubuntu icinga-{{ ansible_facts['distribution_release'] }} main"
+    state: present
+    filename: "{{ ansible_facts['distribution_release'] }}-icinga"
+
+- name: Clean up the .deb file
+  ansible.builtin.file:
+    path: "{{ tmp_path }}icinga-archive-keyring.deb"
+    state: absent
+
+- name: Update APT cache after repository setup
+  ansible.builtin.apt:
+    update_cache: yes
+
+# Install Icinga2 components and packages
+- name: Install Icinga2 components and packages
+  ansible.builtin.package:
+    name: 
+      - icinga2
+      - monitoring-plugins
+      - icingadb
+      - icingadb-redis
+      - icingaweb2 
+      - libapache2-mod-php 
+      - icingacli
+      - icingadb-web
+      - icinga-director
+      - imagemagick 
+      - imagemagick-doc
+      - php-imagick
+

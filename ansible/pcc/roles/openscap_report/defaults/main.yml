@@ -1,10 +1,10 @@
 ---
 # defaults file for openscap_report
 
-debPolicyName: x
-rpmPolicyName: x
-debProfileID: x
-rpmProfileID: x
+debPolicyName: ""
+rpmPolicyName: ""
+debProfileID: ""
+rpmProfileID: ""
 
 tmpDest: /tmp/
 tmpResultsFile: /tmp/openscap_result.xml

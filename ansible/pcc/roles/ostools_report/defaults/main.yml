@@ -1,0 +1,4 @@
+---
+# defaults file for ostools_report
+tmp_path_file: /tmp/results.txt
+output_path: "./reports/"

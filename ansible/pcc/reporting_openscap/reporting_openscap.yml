@@ -1,9 +1,14 @@
 ---
-- name: OpenSCAP Compliance Reporting
-  hosts: all
+- name: OpenSCAP Compliance Reporting + Generate Fixes via Ansible
+  hosts: ansible_workers
   roles:
-    - role: '/home/ansible/pcc-lab/ansible/pcc/roles/openscap_report'
+    - role: openscap_report
       debPolicyName: ssg-ubuntu2204-ds.xml
       rpmPolicyName: ssg-cs9-ds.xml
       debProfileID: xccdf_org.ssgproject.content_profile_cis_level1_server
       rpmProfileID: xccdf_org.ssgproject.content_profile_cis_server_l1
+
+    # - role: '/home/ansible/pcc-lab/ansible/pcc/roles/openscap_genfix'
+    #   debProfileID: xccdf_org.ssgproject.content_profile_cis_level1_server
+    #   rpmProfileID: xccdf_org.ssgproject.content_profile_cis_server_l1     
+

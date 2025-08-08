@@ -80,8 +80,4 @@ reporting_openscap.yml
       rpmProfileID: xccdf_org.ssgproject.content_profile_cis_server_l1
 ```
 
-License
--------
-
-BSD-3-Clause
 

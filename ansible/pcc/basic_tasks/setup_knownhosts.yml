@@ -1,22 +1,28 @@
 ---
-# Execute with --ask-become parameter
+# Execute as below:
+# ANSIBLE_HOST_KEY_CHECKING=false ansible-playbook -i inventory basic_tasks/setup_knownhosts.yml
+#
 
-- name: Scan for SSH host keys and update ~/.ssh/known_hosts file according to the inventory file
-  hosts: all
+- name: Store known hosts of 'all' the hosts in the inventory file
+  hosts: localhost
   connection: local
-  gather_facts: false
   vars:
-    userpath: /home/ansible
+    ssh_known_hosts_command: "ssh-keyscan -T 5"
+    ssh_known_hosts_file: "{{ lookup('env','HOME') + '/.ssh/known_hosts' }}"
+    ssh_known_hosts: "{{ groups['all'] }}"
   tasks:
-    - name: Scan for SSH host keys
-      local_action: ansible.builtin.command ssh-keyscan {{ ansible_host }}
-      changed_when: False
-      register: ssh_scan
-       
-    - name: Update known_hosts
-      local_action:
-        module: ansible.builtin.known_hosts
-        path: "{{ userpath }}/.ssh/known_hosts"
-        key: "{{ item }}"
-        name: "{{ ansible_host }}"
-      loop: "{{ ssh_scan.stdout_lines }}"
+  - name: For each host, scan for its ssh public key
+    ansible.builtin.shell: "ssh-keyscan {{ item }},`dig +short {{ item }}`"
+    loop: "{{ ssh_known_hosts }}"
+    register: ssh_known_host_results
+    ignore_errors: yes
+    #no_log: "true"
+
+  - name: Add/update the public key in the '{{ ssh_known_hosts_file }}'
+    ansible.builtin.known_hosts:
+      name: "{{ item.item }}"
+      key: "{{ item.stdout }}"
+      path: "{{ ssh_known_hosts_file }}"
+    loop: "{{ ssh_known_host_results.results }}"
+    changed_when: false
+    no_log: "true"

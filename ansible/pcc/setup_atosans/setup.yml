@@ -1,12 +1,13 @@
 #
 # First run execute with iadm account parameters:
-# ansible-playbook -i inventory setup_atosans/setup.yml -e "ansible_user=iadm" --ask-pass --ask-become-pass --vault-id @prompt
+# ansible-playbook -i inventory setup_atosans/setup.yml --ask-pass --ask-become-pass --vault-id @prompt
 #
 ---
 
 - name: Ansible agent setup
   gather_facts: true
-  hosts: all
+  remote_user: x
+  hosts: ansible_workers
   vars_files:
     - creds.yml
   tasks:

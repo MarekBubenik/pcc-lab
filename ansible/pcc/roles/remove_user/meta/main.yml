@@ -2,5 +2,4 @@ galaxy_info:
   author: Marek Bubeník
   description: Role that removes a user from the system
   company: purplecoppercentipede.space
-  license: BSD-3-Clause
   min_ansible_version: 2.1
