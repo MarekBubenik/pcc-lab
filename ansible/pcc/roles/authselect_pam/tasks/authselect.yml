@@ -2,6 +2,7 @@
 # Restore profile with: authselect backup-restore xxxxx.backup
 - name: Backup current authselect configuration
   ansible.builtin.command: "authselect apply-changes -b --backup={{ pam_config.backup_file }}"
+  ignore_errors: true
   when: 
     - pam_config.backup_config | bool
 
@@ -11,6 +12,7 @@
     owner: root
     group: root
     mode: '0700'
+  ignore_errors: true
   when: 
     - pam_config.backup_config | bool
 
@@ -44,7 +46,7 @@
 
 - name: Select authselect profile
   ansible.builtin.command: >
-    authselect select custom/{{ pam_config.custom_profile_name }} {{ authselect_features_string }}
+    authselect select custom/{{ pam_config.custom_profile_name }} {{ authselect_features_string }} --force
   register: authselect_result
   changed_when: authselect_result.rc == 0
   notify:
