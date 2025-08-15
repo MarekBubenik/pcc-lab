@@ -4,9 +4,9 @@
 #
 ---
 
-- name: Ansible agent setup
+- name: Ansible "agent" setup
   gather_facts: true
-  remote_user: x
+  remote_user: mb
   hosts: ansible_workers
   vars_files:
     - creds.yml

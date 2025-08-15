@@ -1,4 +1,4 @@
-Role Name
+ostools_report
 =========
 
 OS_Tools reporting role - gathers various information from systems in .txt format (and upload it)

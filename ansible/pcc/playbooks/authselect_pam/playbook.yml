@@ -1,0 +1,5 @@
+---
+- name: Configure PAM using authselect on RHEL 8+
+  hosts: ansible_workers
+  roles:
+    - role: '/home/ansible/pcc-lab/ansible/pcc/roles/authselect_pam'

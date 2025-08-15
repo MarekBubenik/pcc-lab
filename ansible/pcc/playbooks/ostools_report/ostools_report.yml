@@ -3,4 +3,4 @@
   hosts: ansible_workers
   gather_facts: true
   roles:
-    - role: ostools_report
+    - role: '/home/ansible/pcc-lab/ansible/pcc/roles/ostools_report'

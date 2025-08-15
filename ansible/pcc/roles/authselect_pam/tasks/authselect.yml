@@ -1,0 +1,70 @@
+---
+# Restore profile with: authselect backup-restore xxxxx.backup
+- name: Backup current authselect configuration
+  ansible.builtin.command: "authselect apply-changes -b --backup={{ pam_config.backup_file }}"
+  when: 
+    - pam_config.backup_config | bool
+
+- name: Edit backup dir permissions
+  ansible.builtin.file:
+    path: "/var/lib/authselect/backups/{{ pam_config.backup_file }}"
+    owner: root
+    group: root
+    mode: '0700'
+  when: 
+    - pam_config.backup_config | bool
+
+- name: Check if custom profile exists
+  ansible.builtin.stat:
+    path: "/etc/authselect/custom/{{ pam_config.custom_profile_name }}"
+  register: custom_profile_exists
+
+- name: Create custom authselect profile
+  ansible.builtin.command: >
+    authselect create-profile {{ pam_config.custom_profile_name }}
+     --base-on={{ pam_config.custom_profile_base }}
+     --symlink-meta
+  when:
+    - not custom_profile_exists.stat.exists
+
+- name: Deploy custom profile templates
+  ansible.builtin.template:
+    src: "templates/{{ item }}.j2"
+    dest: "/etc/authselect/custom/{{ pam_config.custom_profile_name }}/{{ item }}"
+    owner: root
+    group: root
+    mode: '0644'
+  loop:
+    - system-auth
+    - password-auth
+
+- name: Build authselect features string
+  ansible.builtin.set_fact:
+    authselect_features_string: "{{ pam_config.authselect_features | join(' ') }}"
+
+- name: Select authselect profile
+  ansible.builtin.command: >
+    authselect select custom/{{ pam_config.custom_profile_name }} {{ authselect_features_string }}
+  register: authselect_result
+  changed_when: authselect_result.rc == 0
+  notify:
+    - apply authselect
+    # - restart sssd
+
+- name: Configure pwquality.conf
+  ansible.builtin.lineinfile:
+    path: /etc/security/pwquality.conf
+    regexp: "^{{ item.key }}\\s*="
+    line: "{{ item.key }} = {{ item.value }}"
+    create: yes
+    mode: '0644'
+  loop: "{{ pam_config.password_quality | dict2items }}"
+
+- name: Apply authselect changes
+  ansible.builtin.command: authselect apply-changes
+  changed_when: true
+  notify:
+    - restart sshd
+    - check-status register current profile
+    - check-status display current profile
+    # - restart sssd

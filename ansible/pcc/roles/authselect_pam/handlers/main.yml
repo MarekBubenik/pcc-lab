@@ -1,0 +1,22 @@
+---
+- name: restart sshd
+  ansible.builtin.service:
+    name: sshd
+    state: restarted
+
+- name: restart sssd
+  ansible.builtin.service:
+    name: sssd
+    state: restarted
+
+- name: apply authselect
+  ansible.builtin.command: authselect apply-changes
+
+- name: check-status register current profile
+  ansible.builtin.command: authselect current
+  register: current_profile
+  
+- name: check-status display current profile
+  ansible.builtin.debug:
+    msg: |
+      Current profile: {{ current_profile.stdout_lines | default(['Not using authselect']) }}

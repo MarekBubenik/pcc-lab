@@ -1,0 +1,28 @@
+---
+# PAM/Authselect configuration defaults
+pam_config:
+  # Backup configuration
+  backup_config: true
+  
+  # Backup file, ISO 8601
+  backup_file: "{{ ansible_facts['date_time']['year'] }}-{{ ansible_facts['date_time']['month'] }}-{{ ansible_facts['date_time']['day'] }}_profile.backup"
+
+  # Create custom authselect profile
+  custom_profile_name: "RHEL8-BL512"
+  custom_profile_base: "sssd"
+  
+  # Authselect features to enable
+  authselect_features:
+    - with-faillock
+    - with-mkhomedir
+#    - with-pwquality
+#    - without-nullok
+  
+  # Password quality settings
+  password_quality:
+    minlen: 12
+    dcredit: -1
+    ucredit: -1
+    ocredit: -1
+    lcredit: -1
+    
