@@ -1,5 +1,6 @@
 ---
 # Restore profile with: authselect backup-restore xxxxx.backup
+# Backup tasks might throw errors (if improperaly edited configs beforehand) - rerun to get a backup of a new current config
 - name: Backup current authselect configuration
   ansible.builtin.command: "authselect apply-changes -b --backup={{ pam_config.backup_file }}"
   ignore_errors: true

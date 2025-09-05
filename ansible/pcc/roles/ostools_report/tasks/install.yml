@@ -1,5 +1,5 @@
 ---
-- name: Install dmidecode
+- name: install.yml | Install dmidecode
   ansible.builtin.package:
     name: dmidecode
     state: present

@@ -1,35 +1,40 @@
 ---
-- name: Get serial number
+- name: extra.yml | Get serial number
   ansible.builtin.command: >
     dmidecode -s system-serial-number | tr -d '[:space:]'
   register: dmidecode_var
   ignore_errors: true
 
-- name: Get product number
+- name: extra.yml | Get product number
   ansible.builtin.command: >
     dmidecode -s system-product-name
   register: product_var
   ignore_errors: true
 
-- name: First setup - date
+- name: extra.yml | First setup - date
   ansible.builtin.shell: >
     stat / | awk '/Birth: /{print $2}'
   register: birth_var
   ignore_errors: true
 
-- name: Get manufacturer brand
+- name: extra.yml | Find last logged user
+  ansible.builtin.shell: >
+    last | grep  --invert-match -e "atosans" -e "reboot" | head -n 1 
+  register: last_login_output
+
+- name: extra.yml | Get manufacturer brand
   ansible.builtin.command: >
    dmidecode -s system-manufacturer
   register: model_var
   ignore_errors: true
 
-- name: Check if reboot required (Ubuntu)
+- name: extra.yml | Check if reboot required (Ubuntu)
   ansible.builtin.script: files/reboot_required_deb.sh
   register: reboot_required_deb
   when: ansible_facts['os_family'] == 'Debian'
   ignore_errors: true
 
-- name: Check if reboot required (RedHat)
+- name: extra.yml | Check if reboot required (RedHat)
   ansible.builtin.script: files/reboot_required_rpm.sh
   register: reboot_required_rpm
   when: ansible_facts['os_family'] == 'RedHat'
@@ -39,10 +44,39 @@
 #   ansible.builtin.debug:
 #     msg: "{{ reboot_required_rpm }}"
 
-- name: Check vmware tools version
+- name: extra.yml | Check vmware tools version
   ansible.builtin.command: >
     vmware-toolbox-cmd -v
   register: vmware_tools_version_var
+  ignore_errors: true
+
+- name: extra.yml | Check OS license (Ubuntu)
+  ansible.builtin.shell: >
+    pro status --format yaml | grep -A5 '^contract:' | awk -F ':' '/name:/ {print $2}'
+  register: os_license_deb
+  when: ansible_facts['os_family'] == 'Debian'
+  ignore_errors: true
+
+- name: extra.yml | Check OS license details (Ubuntu)
+  ansible.builtin.shell: >
+    pro status --format yaml | grep -A5 '^contract:' | awk -F ':' '/id:/ {print $2}' || echo "No license detected"
+  register: os_license_details_deb
+  when: ansible_facts['os_family'] == 'Debian'
+  ignore_errors: true
+
+- name: extra.yml | Check OS license (RedHat)
+  ansible.builtin.shell: >
+    subscription-manager status | grep "Overall Status:"
+  register: os_license_rpm
+  when: ansible_facts['os_family'] == 'RedHat'
+  ignore_errors: true
+
+- name: extra.yml | Check OS license details (RedHat)
+#    subscription-manager identity | awk -F ':' '/system identity:/ {print $2}'
+  ansible.builtin.shell: >
+    subscription-manager identity | grep -e "system identity" -e "org ID" | tr '\n' ' '
+  register: os_license_details_rpm
+  when: ansible_facts['os_family'] == 'RedHat'
   ignore_errors: true
 
 # - name: task
