@@ -1,0 +1,14 @@
+[Unit]
+Description=Process audit .19 files
+After=multi-user.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/process_audit_log.sh
+User=root
+Group=root
+StandardOutput=append:/var/log/audit-processor.log
+StandardError=append:/var/log/audit-processor-error.log
+TimeoutStartSec=30
+PrivateTmp=true
+NoNewPrivileges=true

@@ -1,0 +1,11 @@
+[Unit]
+Description=Run audit archive script every 300 seconds
+Requires=audit-archive.service
+
+[Timer]
+OnBootSec=300sec
+OnUnitActiveSec=300sec
+AccuracySec=1sec
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,30 @@
+[Unit]
+Description=Archive audit logs with date range
+After=multi-user.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/archive_audit_log.sh
+User=root
+Group=root
+
+# Logging configuration
+StandardOutput=append:/var/log/audit-archive.log
+#StandardOutput=/var/log/audit-archive.log
+StandardError=append:/var/log/audit-archive-error.log
+
+# Also log to systemd journal (optional)
+# StandardOutput=journal
+# StandardError=journal
+
+# Timeout settings (adjust as needed)
+TimeoutStartSec=30
+TimeoutStopSec=10
+
+# Security settings (optional hardening)
+PrivateTmp=true
+NoNewPrivileges=true
+
+# Restart policy for failed executions
+Restart=no
+# Set to 'on-failure' if you want automatic retry on errors

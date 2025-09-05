@@ -1,0 +1,11 @@
+[Unit]
+Description=Run audit processor every 15 seconds
+Requires=audit-process.service
+
+[Timer]
+OnBootSec=30sec
+OnUnitActiveSec=2sec
+AccuracySec=1sec
+
+[Install]
+WantedBy=timers.target

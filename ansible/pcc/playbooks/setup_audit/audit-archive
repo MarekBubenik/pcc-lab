@@ -1,0 +1,9 @@
+/var/log/audit-archive.log {
+  size 50M
+  rotate 5
+  compress
+  delaycompress
+  missingok
+  notifempty
+  copytruncate
+}
