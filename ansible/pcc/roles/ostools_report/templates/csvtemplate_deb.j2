@@ -1,12 +1,12 @@
 INF OS_Tools SCRIPT VERSION 1.0
 INF FIRSTSETUP  {{ birth_var.stdout }}
-INF LOCATION    x
+INF LOCATION    {{ location }}
 INF LASTLOGGEDUSER  {{ last_login_output.stdout.split()[0] }}
 INF PC_TYPE PC
 INF PC_MODEL    {{ product_var.stdout }}
 INF NETINFO {{ ansible_facts['default_ipv4']['macaddress'] }}   {{ ansible_facts['default_ipv4']['address'] }}  {{ ansible_facts['default_ipv4']['gateway'] }}
 INF HDD C:  {{ (ansible_facts['mounts'][0]['size_total'] / 1024 / 1024 / 1024)  | round | int }}   {{ (ansible_facts['mounts'][0]['size_available'] / 1024 / 1024 / 1024)  | round | int }} {{ ansible_facts['mounts'][0]['mount'] }}  {{ ansible_facts['mounts'][0]['uuid'] }}
-INF HDD D:
+INF HDD D:  N/A
 INF TOTALMEMORY {{ (ansible_facts['memtotal_mb'] / 1024)  | round | int }}
 INF CPUCORES    {{ ansible_facts['processor_cores'] }}
 INF AVPROGRAMVER    N/A
@@ -28,6 +28,6 @@ INF REBOOTPENDINGREASONS    {{ reboot_required_deb.stdout | trim }}
 INF OS_LICENSE  {{ os_license_deb.stdout | trim }}
 INF OS_LICENSE_DETAILS  {{ os_license_details_deb.stdout | trim }}
 INF DEVICEGUARD N/A
-INF VMWARETOOLS {{ vmware_tools_version_var }}
+INF VMWARETOOLS {{ vmware_tools_version_var.stdout }}
 INF REGISTRYLIST    N/A
 INF INF_END

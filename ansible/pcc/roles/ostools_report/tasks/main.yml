@@ -27,7 +27,7 @@
 - name: main.yml | Fetch the report file
   ansible.builtin.fetch:
     src: "{{ tmp_path_file }}"
-    dest: "{{ output_path }}{{ inventory_hostname }}_{{ ansible_facts['date_time']['year'] }}-{{ ansible_facts['date_time']['month'] }}-{{ ansible_facts['date_time']['day'] }}_{{ ansible_facts['date_time']['hour'] }}-{{ ansible_facts['date_time']['minute'] }}-{{ ansible_facts['date_time']['second'] }}_{{ dmidecode_var.stdout }}_INF.txt"
+    dest: "{{ output_path }}{{ inventory_hostname }}_{{ ansible_facts['date_time']['year'] }}-{{ ansible_facts['date_time']['month'] }}-{{ ansible_facts['date_time']['day'] }}_{{ ansible_facts['date_time']['hour'] }}-{{ ansible_facts['date_time']['minute'] }}-{{ ansible_facts['date_time']['second'] }}_{{ dmidecode_var.stdout | regex_replace('\\s+', '') }}_INF.txt"
     flat: yes
 
 # Remove the report from TMP folder

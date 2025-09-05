@@ -31,6 +31,10 @@ Path for temporary files, recommend not to change
 output_path: ""
 ```
 Path for temporary files, recommend not to change
+```
+location: ""
+```
+Setup a location of server (city or country(code))
 
 Example Playbook
 ----------------
